@@ -1,8 +1,4 @@
-# SIC2KeePass
-KeePass import plugin for SafeInCloud XML format.
-
-Allows to transfer XML file produced by SafeInCloud into KeePass password manager.
-
+/*
 Copyright (c) 2016, Alex Zavadsky (Alezy)
 All rights reserved.
 
@@ -27,3 +23,47 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
+using System.Diagnostics;
+using KeePass.Plugins;
+
+namespace SafeInCloudImp
+{
+	public sealed class SafeInCloudImpExt : Plugin
+	{
+		private IPluginHost _host;
+
+		/// <summary>
+		/// The <c>Initialize</c> function is called by KeePass when
+		/// you should initialize your plugin (create menu items, etc.).
+		/// </summary>
+		/// <param name="host">Plugin host interface. By using this
+		/// interface, you can access the KeePass main window and the
+		/// currently opened database.</param>
+		/// <returns>You must return <c>true</c> in order to signal
+		/// successful initialization. If you return <c>false</c>,
+		/// KeePass unloads your plugin (without calling the
+		/// <c>Terminate</c> function of your plugin).</returns>
+		public override bool Initialize(IPluginHost host)
+		{
+			Debug.Assert(host != null);
+			if(host == null)
+                return false;
+			_host = host;
+            //Adding SafeInCloud file format importer
+            _host.FileFormatPool.Add(new SafeInCloud());
+			return true; // Initialization successful
+		}
+
+		/// <summary>
+		/// The <c>Terminate</c> function is called by KeePass when
+		/// you should free all resources, close open files/streams,
+		/// etc. It is also recommended that you remove all your
+		/// plugin menu items from the KeePass menu.
+		/// </summary>
+		public override void Terminate()
+		{
+        }
+	}
+}
