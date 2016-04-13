@@ -7,6 +7,7 @@ xcopy /y /d %Sic%\*.snk %SicTmp%\
 xcopy /y /d /i %Sic%\Properties %SicTmp%\Properties
 xcopy /y /d /i %Sic%\Resources %SicTmp%\Resources
 KeePass\KeePass.exe --plgx-create "%~dp0%SicTmp%"
+rm %Sic%.plgx
 ren %SicTmp%.plgx %Sic%.plgx
 xcopy /y %Sic%.plgx KeePass\plugins\
 rd /s /q %SicTmp%
