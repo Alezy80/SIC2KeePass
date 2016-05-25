@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Text;
+using System.Windows.Forms;
 using System.Xml;
 using KeePass.DataExchange;
 using KeePass.Resources;
@@ -85,34 +86,54 @@ namespace SafeInCloudImp
 
         public override void Import(PwDatabase pwStorage, Stream sInput, IStatusLogger slLogger)
         {
-            _labels.Clear();
-            _groups.Clear();
-
-            StreamReader sr = new StreamReader(sInput, Encoding.Unicode);
-            string strDoc = sr.ReadToEnd();
-            sr.Close();
-
-            XmlDocument xd = new XmlDocument();
-            xd.LoadXml(strDoc);
-
-            XmlNode xnRoot = xd.DocumentElement;
-            if (xnRoot == null)
-                return;
-            Debug.Assert(xnRoot.Name == ElemDatabase);
-            foreach (XmlNode xn in xnRoot.ChildNodes)
+            try
             {
-                if (xn.NodeType == XmlNodeType.Element)
+                _labels.Clear();
+                _groups.Clear();
+
+                StreamReader sr = new StreamReader(sInput, Encoding.Unicode);
+                string strDoc = sr.ReadToEnd();
+                sr.Close();
+
+                XmlDocument xd = new XmlDocument();
+                xd.LoadXml(strDoc);
+
+                XmlNode xnRoot = xd.DocumentElement;
+                if (xnRoot == null)
+                    return;
+                Debug.Assert(xnRoot.Name == ElemDatabase);
+                foreach (XmlNode xn in xnRoot.ChildNodes)
                 {
-                    switch (xn.Name)
+                    if (xn.NodeType == XmlNodeType.Element)
                     {
-                        case ElemCard:
-                            ImportCard(xn, pwStorage.RootGroup, pwStorage);
-                            break;
-                        case ElemLabel:
-                            ImportLabel(xn, pwStorage.RootGroup, pwStorage);
-                            break;
+                        switch (xn.Name)
+                        {
+                            case ElemLabel:
+                                ImportLabel(xn, pwStorage.RootGroup, pwStorage);
+                                break;
+                        }
                     }
                 }
+                foreach (XmlNode xn in xnRoot.ChildNodes)
+                {
+                    if (xn.NodeType == XmlNodeType.Element)
+                    {
+                        switch (xn.Name)
+                        {
+                            case ElemCard:
+                                ImportCard(xn, pwStorage.RootGroup, pwStorage);
+                                break;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(String.Format("Problem while importing XML file. " +
+                    "Copy content of this dialog box by pressing Ctrl+C and send error report to author\n" +
+                    "https://github.com/Alezy80/SIC2KeePass/issues\n\n{0}\n{1}",
+                    ex.Message, ex.StackTrace.ToString()),
+                    "Import error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -163,6 +184,14 @@ namespace SafeInCloudImp
                 fieldType == ElemFieldTypeSecret;
         }
 
+        private string GetLabel(string id)
+        {
+            string label;
+            if (_labels.TryGetValue(id, out label))
+                return label;
+            return id;
+        }
+
         private void ImportFields(XmlNode xnCard, PwEntry pwEntry, PwDatabase pd)
         {
             Boolean hasUser = false;
@@ -177,7 +206,7 @@ namespace SafeInCloudImp
                 switch (field.Name)
                 {
                     case ElemFieldLabelId:
-                        labels.Add(_labels[field.InnerText]);
+                        labels.Add(GetLabel(field.InnerText));
                         break;
                     case ElemFieldNotes:
                         ImportUtil.AppendToField(pwEntry, PwDefs.NotesField, field.InnerText, pd);
