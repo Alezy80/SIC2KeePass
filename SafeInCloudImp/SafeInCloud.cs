@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Text;
+using System.Web;
 using System.Windows.Forms;
 using System.Xml;
 using KeePass.DataExchange;
@@ -36,6 +37,7 @@ namespace SafeInCloudImp
         private const string ElemFieldTypeSecret = "secret";
         private const string ElemFieldTypeFile = "file";
         private const string ElemFieldTypeImage = "image";
+        private const string ElemFieldTypeOtp = "one_time_password";
 
         private static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1);
 
@@ -181,7 +183,8 @@ namespace SafeInCloudImp
             return
                 fieldType == ElemFieldTypePassword ||
                 fieldType == ElemFieldTypePin ||
-                fieldType == ElemFieldTypeSecret;
+                fieldType == ElemFieldTypeSecret ||
+                fieldType == ElemFieldTypeOtp;
         }
 
         private string GetLabel(string id)
@@ -190,6 +193,44 @@ namespace SafeInCloudImp
             if (_labels.TryGetValue(id, out label))
                 return label;
             return id;
+        }
+
+        public static String DecodeQueryParameters(Uri uri, String key)
+        {
+            foreach (string item in uri.Query.Split('&'))
+            {
+                String[] parts = item.Replace("?", "").Split('=');
+                if (parts.Length == 2 && parts[0].Equals(key, StringComparison.OrdinalIgnoreCase))
+                    return parts[1];
+            }
+            return null;
+        }
+
+        private static String GetSecretKey(String text)
+        {
+            try
+            {
+                Uri uri = new Uri(text);
+                if ((uri.Scheme == "otpauth") && (uri.Authority == "totp"))
+                {
+                    String str = DecodeQueryParameters(uri, "secret");
+                    if (!String.IsNullOrEmpty(str))
+                    {
+                        String result = "key=" + str;
+                        str = DecodeQueryParameters(uri, "period");
+                        if (!String.IsNullOrEmpty(str))
+                            result = result + "&step=" + str;
+                        str = DecodeQueryParameters(uri, "digits");
+                        if (!String.IsNullOrEmpty(str))
+                            result = result + "&size=" + str;
+                        return result;
+                    }
+                }
+            }
+            catch
+            {
+            }
+            return "key=" + text;
         }
 
         private void ImportFields(XmlNode xnCard, PwEntry pwEntry, PwDatabase pd)
@@ -214,6 +255,7 @@ namespace SafeInCloudImp
                     case ElemFieldSimple:
                         String fieldName = GetAttribute(field, ElemFieldName, "");
                         String type = GetAttribute(field, ElemFieldType, "");
+                        String value = field.InnerText;
                         if (!hasUser && type == ElemFieldTypeLogin)
                         {
                             fieldName = PwDefs.UserNameField;
@@ -229,9 +271,13 @@ namespace SafeInCloudImp
                             fieldName = PwDefs.PasswordField;
                             hasPassword = true;
                         }
+                        else if (type == ElemFieldTypeOtp)
+                        {
+                            fieldName = "otp";
+                            value = GetSecretKey(value);
+                        }
 
                         fieldName = nu.MakeUnique(fieldName);
-                        String value = field.InnerText;
                         ImportUtil.AppendToField(pwEntry, fieldName, value, pd);
                         if (IsSecretField(type))
                             pwEntry.Strings.EnableProtection(fieldName, true);

@@ -1,6 +1,6 @@
 # SIC2KeePass
 
-This plugin allows to transfer **[SafeInCloud](https://www.safe-in-cloud.com/)** exported XML file into **[KeePass 2.xx](http://keepass.info/)** password manager. At the moment of writing this it supports all kinds of contents from **SafeInCloud** including, but not limited, embedded files and pictures.
+This plugin allows to transfer **[SafeInCloud](https://www.safe-in-cloud.com/)** exported XML file into **[KeePass 2.xx](http://keepass.info/)** password manager. At the moment of writing this it supports all kinds of contents from **SafeInCloud** including, but not limited, embedded files and pictures. It also supports transfer of TOTP fields compatible with **[KeeOtp](https://bitbucket.org/devinmartin/keeotp/wiki/Home)** plugin.
 
 ## Plugin Installation and Uninstallation
 
