@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("SafeInCloud XML importer")]
-[assembly: AssemblyDescription("Plugin for importing all information from SafeInCloud password manager")]
+[assembly: AssemblyDescription("Plugin for importing all information from SafeInCloud password manager\nhttps://github.com/Alezy80/SIC2KeePass/")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Alezy")]
 [assembly: AssemblyProduct("KeePass Plugin")]
-[assembly: AssemblyCopyright("Copyright © 2016 Alezy")]
+[assembly: AssemblyCopyright("Copyright © 2016-2017 Alezy")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,4 +32,4 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.*")]
-[assembly: AssemblyFileVersion("1.0.2.0")]
+[assembly: AssemblyFileVersion("1.0.3.0")]

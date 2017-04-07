@@ -71,5 +71,13 @@ namespace SafeInCloudImp
 		public override void Terminate()
 		{
         }
+
+	    public override string UpdateUrl
+	    {
+	        get
+	        {
+	            return "https://raw.githubusercontent.com/Alezy80/SIC2KeePass/master/version_manifest.txt";
+            }
+	    }
 	}
 }
