@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Text;
-using System.Web;
 using System.Windows.Forms;
 using System.Xml;
 using KeePass.DataExchange;
@@ -38,13 +37,14 @@ namespace SafeInCloudImp
         private const string ElemFieldTypeFile = "file";
         private const string ElemFieldTypeImage = "image";
         private const string ElemFieldTypeOtp = "one_time_password";
+        private const string ElemFieldTypeCustomIcon = "custom_icon";
 
         private static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1);
 
         public override bool SupportsImport { get { return true; } }
         public override bool SupportsExport { get { return false; } }
         public override string FormatName { get { return "SafeInCloud"; } }
-        public override string DefaultExtension { get { return "xml"; } }
+        public override string DefaultExtension { get { return "xml|db"; } }
         public override string ApplicationGroup { get { return KPRes.PasswordManagers; } }
         public override bool ImportAppendsToRootGroupOnly { get { return false; } }
 
@@ -93,7 +93,11 @@ namespace SafeInCloudImp
                 _labels.Clear();
                 _groups.Clear();
 
-                StreamReader sr = new StreamReader(sInput, Encoding.Unicode);
+                var decodedStream = Decryptor.DecodeStream(sInput);
+                if (decodedStream == null)
+                    return;
+                StreamReader sr = new StreamReader(decodedStream, Encoding.Unicode);
+
                 string strDoc = sr.ReadToEnd();
                 sr.Close();
 
@@ -292,6 +296,8 @@ namespace SafeInCloudImp
                         Byte[] imageContent = Convert.FromBase64String(field.InnerText);
                         pwEntry.Binaries.Set(imageName, new ProtectedBinary(false, imageContent));
                         break;
+                    case ElemFieldTypeCustomIcon:
+                        break; //cann't  handle
                     default:
                         Debug.Assert(false, "Unknown field type " + field.Name);
                         break;

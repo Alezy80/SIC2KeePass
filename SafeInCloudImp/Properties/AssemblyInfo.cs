@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("SafeInCloud XML importer")]
-[assembly: AssemblyDescription("Plugin for importing all information from SafeInCloud password manager\nhttps://github.com/Alezy80/SIC2KeePass/")]
+[assembly: AssemblyDescription("Plugin for importing all data from SafeInCloud password manager\nhttps://github.com/Alezy80/SIC2KeePass/")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Alezy")]
 [assembly: AssemblyProduct("KeePass Plugin")]
-[assembly: AssemblyCopyright("Copyright © 2016-2017 Alezy")]
+[assembly: AssemblyCopyright("Copyright © 2016-2018 Alezy")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.*")]
-[assembly: AssemblyFileVersion("1.0.3.0")]
+[assembly: AssemblyVersion("2.0.0.*")]
+[assembly: AssemblyFileVersion("2.0.0.0")]
