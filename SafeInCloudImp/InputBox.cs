@@ -45,7 +45,7 @@ namespace SafeInCloudImp
             _buttonCancel.Name = "buttonCancel";
             _buttonCancel.Size = new Size(75, 23);
             _buttonCancel.TabIndex = 4;
-            _buttonCancel.Text = "Отмена";
+            _buttonCancel.Text = "Cancel";
             _buttonCancel.UseVisualStyleBackColor = true;
             AcceptButton = _buttonOK;
             AutoScaleDimensions = new SizeF(6F, 13F);

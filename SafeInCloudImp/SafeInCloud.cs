@@ -96,13 +96,10 @@ namespace SafeInCloudImp
                 var decodedStream = Decryptor.DecodeStream(sInput);
                 if (decodedStream == null)
                     return;
-                StreamReader sr = new StreamReader(decodedStream, Encoding.Unicode);
-
-                string strDoc = sr.ReadToEnd();
-                sr.Close();
 
                 XmlDocument xd = new XmlDocument();
-                xd.LoadXml(strDoc);
+                xd.Load(decodedStream);
+                decodedStream.Close();
 
                 XmlNode xnRoot = xd.DocumentElement;
                 if (xnRoot == null)
