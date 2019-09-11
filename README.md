@@ -8,7 +8,7 @@ This plugin allows to transfer **[SafeInCloud](https://www.safe-in-cloud.com/)**
 - Copy the plugin file into the **KeePass** directory (where the KeePass.exe is) or a subdirectory of it.
 - Restart **KeePass** in order to load the new plugin.
 
-In other words, to "install" a plugin you simply need to copy it somewhere into the **KeePass** directory.
+In other words, to "install" a plugin you simply need to copy it somewhere into the **KeePass** directory. If you have plugin loading errors in Linux you may need to install the **Mono** runtime, e.g in Ubuntu based distros please install package `mono-complete` or see [instructions](https://www.mono-project.com/download/stable/#download-lin) for your distro.
 
 To "uninstall" a plugin, delete the plugin files.
 
