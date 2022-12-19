@@ -6,6 +6,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
+using Ionic.Zlib;
 using KeePass.DataExchange;
 using KeePass.Resources;
 using KeePassLib;
@@ -285,7 +286,7 @@ namespace SafeInCloudImp
                         break;
                     case ElemFieldTypeFile:
                         String fileName = GetAttribute(field, ElemFieldName, "");
-                        Byte[] content = Convert.FromBase64String(field.InnerText);
+                        Byte[] content = ZlibStream.UncompressBuffer(Convert.FromBase64String(field.InnerText));
                         pwEntry.Binaries.Set(fileName, new ProtectedBinary(false, content));
                         break;
                     case ElemFieldTypeImage:
